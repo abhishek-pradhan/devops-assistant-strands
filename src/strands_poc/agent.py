@@ -25,6 +25,7 @@ from contextlib import ExitStack
 
 from strands import Agent
 from strands.vended_tools import http_request, read, shell
+from strands_harness import create_harness
 
 from strands_poc.callbacks import DevOpsCallbackHandler
 from strands_poc.mcp_tools import build_mcp_tools
@@ -33,11 +34,18 @@ from strands_poc.prompts import SYSTEM_PROMPT
 
 
 def build_agent(mcp_tools: list, handler: DevOpsCallbackHandler) -> Agent:
-    return Agent(
+    return create_harness(
         model=build_model(),
         system_prompt=SYSTEM_PROMPT,
         tools=[shell, read, http_request] + mcp_tools,
         callback_handler=handler,
+        builtin_tools=[],
+        builtin_plugins=[],
+        context_manager=False,
+        session=False,
+        skills=False,
+        memory=False,
+        caching=False,
     )
 
 
