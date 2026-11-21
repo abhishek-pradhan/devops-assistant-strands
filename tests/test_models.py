@@ -19,7 +19,7 @@ def test_build_model_defaults_to_bedrock(monkeypatch: pytest.MonkeyPatch) -> Non
 
     assert isinstance(result, FakeBedrockModel)
     assert created == {
-        "model_id": "apac.amazon.nova-pro-v1:0",
+        "model_id": "apac.amazon.nova-lite-v1:0",
         "max_tokens": 4096,
     }
 
