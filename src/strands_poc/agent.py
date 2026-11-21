@@ -56,7 +56,7 @@ def build_model():
         api_key = os.environ.get("OPENROUTER_API_KEY")
         if not api_key:
             raise ValueError("OPENROUTER_API_KEY env var is required when MODEL_PROVIDER=openrouter")
-        model_id = os.environ.get("OPENROUTER_MODEL", "nvidia/nemotron-3-ultra-550b-a55b:free")
+        model_id = os.environ.get("OPENROUTER_MODEL", "openrouter/free")
         print(f"Using OpenRouter — model: {model_id}")
         return LiteLLMModel(
             client_args={"api_key": api_key},
