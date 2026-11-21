@@ -1,6 +1,5 @@
 from typing import Any
 
-
 # ANSI colour helpers — work on any terminal without extra dependencies
 _RESET = "\033[0m"
 _DIM = "\033[2m"
@@ -119,7 +118,12 @@ class DevOpsCallbackHandler:
             self._emit_thinking(reasoning)
             return
 
-        tool_use = kwargs.get("event", {}).get("contentBlockStart", {}).get("start", {}).get("toolUse")
+        tool_use = (
+            kwargs.get("event", {})
+            .get("contentBlockStart", {})
+            .get("start", {})
+            .get("toolUse")
+        )
         if tool_use:
             self._tool_count += 1
             print(

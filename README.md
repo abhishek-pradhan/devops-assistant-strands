@@ -52,24 +52,81 @@ uv sync
 uv run devops-assistant
 ```
 
+## Development
+
+Install the application and development dependencies:
+
+```bash
+uv sync --group dev
+```
+
+Run the automated tests:
+
+```bash
+uv run pytest
+```
+
+Generate a test coverage report:
+
+```bash
+uv run pytest --cov=strands_poc --cov-report=term-missing
+```
+
+Check formatting and lint rules with Ruff:
+
+```bash
+uv run ruff check src tests
+```
+
+Automatically fix Ruff issues where possible:
+
+```bash
+uv run ruff check --fix src tests
+```
+
+Run the Pyright type checker:
+
+```bash
+uv run pyright src tests
+```
+
+Run all project quality checks together:
+
+```bash
+uv run pytest
+uv run ruff check src tests
+uv run pyright src tests
+```
+
 ## Model providers
 
 The agent supports two providers, selected via the `MODEL_PROVIDER` env var.
 
 ### Bedrock (default)
 
-Uses Amazon Bedrock in `ap-south-1` with the APAC inference profile for Nova Pro. AWS credentials must be configured.
+Uses Amazon Bedrock in `ap-south-1` with the APAC inference profile. Defaults to **Nova Lite** — a good balance of speed and cost at $0.06/$0.24 per million input/output tokens. AWS credentials must be configured.
 
 ```bash
 uv run devops-assistant
 # or override the model:
-BEDROCK_MODEL_ID=apac.anthropic.claude-3-7-sonnet-20250219-v1:0 
-uv run devops-assistant
+BEDROCK_MODEL_ID=apac.amazon.nova-pro-v1:0 uv run devops-assistant
 ```
 
 | Env var | Default | Description |
 |---|---|---|
-| `BEDROCK_MODEL_ID` | `apac.amazon.nova-pro-v1:0` | Any Bedrock inference profile ID available in your region |
+| `BEDROCK_MODEL_ID` | `apac.amazon.nova-lite-v1:0` | Any Bedrock inference profile ID available in your region |
+
+**Available APAC inference profiles and pricing** (ap-south-1):
+
+| Profile ID | Input | Output | Notes |
+|---|---|---|---|
+| `apac.amazon.nova-micro-v1:0` | $0.035 | $0.14 | Fastest, cheapest; good for simple queries |
+| `apac.amazon.nova-lite-v1:0` | $0.06 | $0.24 | **Default** — best speed/cost balance |
+| `apac.amazon.nova-pro-v1:0` | $0.80 | $3.20 | Strongest reasoning; use for complex tasks |
+| `apac.anthropic.claude-3-haiku-20240307-v1:0` | $0.25 | $1.25 | Fast Claude model |
+| `apac.anthropic.claude-3-7-sonnet-20250219-v1:0` | — | — | Best Claude available in APAC |
+
+Prices are per million tokens on the APAC geo endpoint.
 
 ### OpenRouter
 
@@ -78,23 +135,23 @@ Uses [LiteLLM](https://docs.litellm.ai) under the hood to route requests to Open
 ```bash
 export MODEL_PROVIDER=openrouter
 export OPENROUTER_API_KEY=sk-or-xxxxxxx
-export OPENROUTER_MODEL=mistralai/mistral-7b-instruct
+export OPENROUTER_MODEL=nvidia/nemotron-3-ultra-550b-a55b:free
 uv run devops-assistant
 ```
 
 | Env var | Default | Description |
 |---|---|---|
 | `OPENROUTER_API_KEY` | — | Required. Your OpenRouter API key |
-| `OPENROUTER_MODEL` | `mistralai/mistral-7b-instruct` | Any model slug from [openrouter.ai/models](https://openrouter.ai/models) |
+| `OPENROUTER_MODEL` | `nvidia/nemotron-3-ultra-550b-a55b:free` | Any model slug from [openrouter.ai/models](https://openrouter.ai/models) |
 
 **Free models worth trying:**
 
 | Model slug | Notes |
 |---|---|
-| `mistralai/mistral-7b-instruct` | Fast, good instruction following |
-| `meta-llama/llama-3.1-8b-instruct` | Strong reasoning for its size |
+| `nvidia/nemotron-3-ultra-550b-a55b:free` | Default — large model, free tier |
+| `deepseek/deepseek-r1-0528:free` | Strong reasoning, visible thinking steps |
+| `meta-llama/llama-3.1-8b-instruct` | Fast, good instruction following |
 | `google/gemma-3-4b-it` | Lightweight, quick responses |
-| `deepseek/deepseek-r1-0528:free` | Strong reasoning, free tier |
 
 Check [openrouter.ai/models?order=pricing-asc](https://openrouter.ai/models?order=pricing-asc) filtered to "Free" for the current list.
 

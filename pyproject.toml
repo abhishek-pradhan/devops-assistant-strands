@@ -1,7 +1,7 @@
 [project]
 name = "strands-poc"
 version = "0.1.0"
-description = "Add your description here"
+description = "A conversational DevOps assistant powered by the Strands Agents SDK"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
@@ -12,6 +12,39 @@ dependencies = [
 [project.scripts]
 devops-assistant = "strands_poc.agent:main"
 
+[dependency-groups]
+dev = [
+    "pyright>=1.1.400",
+    "pytest>=8.4.0",
+    "pytest-cov>=6.2.1",
+    "ruff>=0.12.0",
+]
+
 [build-system]
 requires = ["uv_build>=0.13.9,<0.14.0"]
 build-backend = "uv_build"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-ra --strict-markers --strict-config"
+
+[tool.coverage.run]
+source = ["strands_poc"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true
+
+[tool.ruff]
+target-version = "py314"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["B", "E", "F", "I", "SIM", "UP"]
+
+[tool.pyright]
+include = ["src", "tests"]
+pythonVersion = "3.14"
+typeCheckingMode = "basic"

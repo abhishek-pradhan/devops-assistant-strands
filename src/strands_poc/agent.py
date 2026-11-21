@@ -17,7 +17,7 @@ Provider selection (set env vars before running):
   OpenRouter:
     export MODEL_PROVIDER=openrouter
     export OPENROUTER_API_KEY=sk-or-...
-    export OPENROUTER_MODEL=nvidia/nemotron-3-ultra-550b-a55b:free   # any free OpenRouter model
+    export OPENROUTER_MODEL=particle-ai/particle-1:free   # any free OpenRouter model
     uv run devops-assistant
 """
 

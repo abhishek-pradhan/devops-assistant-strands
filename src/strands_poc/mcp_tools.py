@@ -1,8 +1,15 @@
 from contextlib import ExitStack
+from typing import cast
 
 from mcp import StdioServerParameters
 from mcp.client.stdio import stdio_client
-from strands.tools.mcp import MCPClient
+from strands.tools.mcp import MCPClient, MCPTransport
+
+
+def _stdio_transport(
+    parameters: StdioServerParameters,
+) -> MCPTransport:
+    return cast(MCPTransport, stdio_client(parameters))
 
 
 def build_mcp_tools(stack: ExitStack) -> list:
@@ -30,8 +37,8 @@ def build_mcp_tools(stack: ExitStack) -> list:
     # Runs as a local subprocess via uvx — no separate install needed.
     #
     docs_client = MCPClient(
-        transport_callable=lambda: stdio_client(
-            StdioServerParameters(
+        transport_callable=lambda: _stdio_transport(
+            parameters=StdioServerParameters(
                 command="uvx",
                 args=["awslabs.aws-documentation-mcp-server@latest"],
                 env={
