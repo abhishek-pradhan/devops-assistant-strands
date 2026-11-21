@@ -21,7 +21,11 @@ strands-poc/
 ├── uv.lock                      # locked dependency tree
 ├── README.md
 └── src/strands_poc/
-    └── agent.py                 # agent definition, model selection, REPL loop
+    ├── agent.py                 # agent construction and REPL loop
+    ├── callbacks.py             # streaming output callback
+    ├── mcp_tools.py             # MCP server setup
+    ├── models.py                # model provider selection
+    └── prompts.py               # system prompt
 ```
 
 ## Requirements
